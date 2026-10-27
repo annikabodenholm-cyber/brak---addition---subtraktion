@@ -1,67 +1,37 @@
-(()=>{"use strict";
-const TOTAL=30;let level=1,pos=0,points=0,qs=[];const E=id=>document.getElementById(id);
-function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b)[a,b]=[b,a%b];return a||1}
-function lcm(a,b){return Math.abs(a*b)/gcd(a,b)}
-function red(n,d){let g=gcd(n,d);return{n:n/g,d:d/g}}
-function key(r){r=red(r.n,r.d);return r.n+"/"+r.d}
-function F(n,d){return `<span class="frac"><span class="num">${n}</span><span class="den">${d}</span></span>`}
-function V(r){r=red(r.n,r.d);if(r.n===0)return"0";if(r.d===1)return""+r.n;if(r.n>r.d){let w=Math.floor(r.n/r.d),m=r.n%r.d;return m?w+" "+F(m,r.d):""+w}return F(r.n,r.d)}
-function calc(a,b,c,d,o){let L=lcm(b,d),x=a*(L/b),y=c*(L/d);return red(o==="+"?x+y:x-y,L)}
-function pick(a){return a[Math.floor(Math.random()*a.length)]}
-function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function parseAnswer(s){
- s=s.trim().replace(",",".").replace(/\s+/g," ");
- let m=s.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)$/);
- if(m){let w=+m[1],n=+m[2],d=+m[3];if(!d)return null;return red(w*d+n,d)}
- m=s.match(/^(\d+)\s*\/\s*(\d+)$/);if(m){let n=+m[1],d=+m[2];if(!d)return null;return red(n,d)}
- m=s.match(/^(\d+)$/);if(m)return {n:+m[1],d:1};return null
-}
-function make(ix){
- let a,b,c,d,o=Math.random()<.5?"+":"-",story="",isStory=false;
- if(level===1){b=d=pick([3,4,5,6,7,8,9,10,12]);a=1+Math.floor(Math.random()*(b-1));c=1+Math.floor(Math.random()*(d-1));if(o==="-"&&c>a)[a,c]=[c,a]}
- else if(level===2||level===3){[b,d]=pick([[2,4],[3,6],[4,8],[5,10],[6,12],[3,9],[4,12],[5,15],[6,15],[8,12]]);a=1+Math.floor(Math.random()*(b-1));c=1+Math.floor(Math.random()*(d-1));if(o==="-"&&calc(a,b,c,d,o).n<0){[a,c]=[c,a];[b,d]=[d,b]}}
- else{
-  [b,d]=pick([[4,6],[6,8],[6,9],[8,12],[10,15],[9,12],[5,8],[7,10],[8,15],[12,15],[7,12],[10,12]]);
-  a=1+Math.floor(Math.random()*(b-1));c=1+Math.floor(Math.random()*(d-1));
-  if(o==="-"&&calc(a,b,c,d,o).n<0){[a,c]=[c,a];[b,d]=[d,b]}
-  if(ix<18){isStory=true;let n=pick(["Maja","Leo","Sam","Nora","Ali","Ella"]);
-   let contexts=[
-    o==="+"?`${n} går ${a}/${b} km på morgonen och ${c}/${d} km senare. Hur långt går ${n} sammanlagt?`:`${n} har ${a}/${b} liter saft och använder ${c}/${d} liter. Hur mycket är kvar?`,
-    o==="+"?`${n} läser ${a}/${b} av en bok på måndagen och ${c}/${d} av boken på tisdagen. Hur stor del av boken läser ${n} sammanlagt?`:`${n} har ${a}/${b} meter tyg och använder ${c}/${d} meter. Hur mycket tyg är kvar?`,
-    o==="+"?`Till en maträtt används ${a}/${b} liter av en ingrediens och ${c}/${d} liter av en annan. Hur mycket används sammanlagt?`:`I en flaska finns ${a}/${b} liter. ${c}/${d} liter hälls upp. Hur mycket finns kvar?`
-   ];story=pick(contexts)
-  }
- }
- let right=calc(a,b,c,d,o),L=lcm(b,d),x=a*(L/b),y=c*(L/d),raw=o==="+"?x+y:x-y;
- let solution=b===d?`${F(a,b)} ${o} ${F(c,d)} = ${F(Math.abs(o==="+"?a+c:a-c),b)} = ${V(right)}`:`${F(a,b)} ${o} ${F(c,d)}. Gemensam nämnare är ${L}: ${F(x,L)} ${o} ${F(y,L)} = ${F(Math.abs(raw),L)} = ${V(right)}.`;
- let candidates=[right,red(Math.max(0,a+c),b+d),red(Math.max(0,raw+1),L),red(Math.max(0,raw-1),L)],seen=new Set(),opts=[];
- for(let r of candidates){let z=key(r);if(!seen.has(z)){seen.add(z);opts.push(r)}}
- while(opts.length<4){let r=red(Math.max(0,right.n+Math.floor(Math.random()*7)-3),right.d),z=key(r);if(!seen.has(z)){seen.add(z);opts.push(r)}}
- return{a,b,c,d,o,story,isStory,right,solution,opts:shuffle(opts.slice(0,4))}
-}
-function build(){qs=[];let used=new Set(),guard=0;while(qs.length<TOTAL&&guard++<2000){let q=make(qs.length),z=`${q.a}/${q.b}${q.o}${q.c}/${q.d}:${q.isStory}`;if(!used.has(z)){used.add(z);qs.push(q)}}}
-function start(l){level=l;pos=0;points=0;build();E("menu").classList.add("hidden");E("result").classList.add("hidden");E("game").classList.remove("hidden");show()}
-function show(){
- let q=qs[pos],free=level>=3;
- E("progress").textContent=`Uppgift ${pos+1} av ${TOTAL}`;E("score").textContent=`Rätt: ${points}`;E("fill").style.width=`${pos/TOTAL*100}%`;
- E("instruction").textContent=free?"Räkna ut svaret själv. Förkorta eller skriv i blandad form om det går.":"Förkorta svaret eller skriv i blandad form om det går.";
- E("story").textContent=q.story;
- E("question").innerHTML=(level===4&&q.isStory)?"":`${F(q.a,q.b)} ${q.o} ${F(q.c,q.d)}`;
- E("choices").innerHTML="";E("feedback").textContent="";E("solution").innerHTML="";E("next").classList.add("hidden");
- E("choices").classList.toggle("hidden",free);
- E("freeArea").classList.toggle("hidden",!free);
- if(free){E("freeAnswer").value="";E("freeAnswer").disabled=false;E("check").disabled=false;setTimeout(()=>E("freeAnswer").focus(),0)}
- else {q.opts.forEach(r=>{let b=document.createElement("button");b.className="answer";b.innerHTML=V(r);b.addEventListener("click",()=>checkChoice(key(r)));E("choices").appendChild(b)})}
-}
-function finish(correct,q){
- if(correct){points++;E("feedback").textContent="✅ Rätt!"}else{E("feedback").innerHTML=`❌ Rätt svar: ${V(q.right)}`;E("solution").innerHTML=(level===4&&q.isStory?`Här behövs ${q.o==="+"?"addition":"subtraktion"}. `:"")+q.solution}
- E("score").textContent=`Rätt: ${points}`;E("next").classList.remove("hidden")
-}
-function checkChoice(chosen){document.querySelectorAll(".answer").forEach(b=>b.disabled=true);let q=qs[pos];finish(chosen===key(q.right),q)}
-function checkFree(){let q=qs[pos],r=parseAnswer(E("freeAnswer").value);if(!r){E("feedback").textContent="Skriv svaret som ett heltal, ett bråk eller i blandad form.";return}E("freeAnswer").disabled=true;E("check").disabled=true;finish(key(r)===key(q.right),q)}
-function next(){if(++pos>=TOTAL){E("game").classList.add("hidden");E("result").classList.remove("hidden");E("final").textContent=`${points} av ${TOTAL} rätt`}else show()}
-function home(){E("game").classList.add("hidden");E("result").classList.add("hidden");E("menu").classList.remove("hidden")}
-document.querySelectorAll("[data-level]").forEach(b=>b.addEventListener("click",()=>start(+b.dataset.level)));
-E("next").addEventListener("click",next);E("home").addEventListener("click",home);E("resultHome").addEventListener("click",home);E("again").addEventListener("click",()=>start(level));E("check").addEventListener("click",checkFree);
-E("freeAnswer").addEventListener("keydown",e=>{if(e.key==="Enter"&&!E("check").disabled)checkFree()});
+(()=>{"use strict";const TOTAL=30,$=id=>document.getElementById(id);let level=1,pos=0,score=0,tasks=[],locked=false;
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b)[a,b]=[b,a%b];return a||1}function lcm(a,b){return a/gcd(a,b)*b}function red(n,d){let g=gcd(n,d);return{n:n/g,d:d/g}}function key(r){r=red(r.n,r.d);return r.n+"/"+r.d}
+function F(n,d){let r=red(n,d);return `<span class="frac"><span class="num">${r.n}</span><span class="den">${r.d}</span></span>`}function V(r){r=red(r.n,r.d);if(r.d===1)return""+r.n;if(r.n>r.d){let w=Math.floor(r.n/r.d),m=r.n%r.d;return m?w+" "+F(m,r.d):""+w}return F(r.n,r.d)}function T(r){r=red(r.n,r.d);if(r.d===1)return""+r.n;if(r.n>r.d){let w=Math.floor(r.n/r.d),m=r.n%r.d;return m?w+" "+m+"/"+r.d:""+w}return r.n+"/"+r.d}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+function parse(s){s=s.trim().replace(/\s+/g," ");let m=s.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)$/);if(m&&+m[3])return red((+m[1])*(+m[3])+(+m[2]),+m[3]);m=s.match(/^(\d+)\s*\/\s*(\d+)$/);if(m&&+m[2])return red(+m[1],+m[2]);if(/^\d+$/.test(s))return{n:+s,d:1};return null}
+const pairsEasy=[[2,4],[3,6],[4,8],[5,10],[3,9],[4,12],[6,12]];
+const pairsAK8=[[3,4],[2,3],[4,6],[4,8],[5,10],[6,9],[6,12],[5,6],[4,10],[8,12],[3,8],[5,8],[4,9],[5,12],[6,8],[7,10],[5,7],[6,7],[7,8],[7,9]];
+function frac(d){return{n:ri(1,d-1),d}}
+function calc(a,b,op){return op==="+"?red(a.n*b.d+b.n*a.d,a.d*b.d):red(a.n*b.d-b.n*a.d,a.d*b.d)}
+function validSub(a,b){return a.n*b.d>b.n*a.d}
+function make(level){
+ let q={story:"",expr:"",choices:[]},a,b,op=pick(["+","−"]),p;
+ if(level===1){let d=pick([3,4,5,6,8,10,12]);a=frac(d);b=frac(d);if(op==="−"&&!validSub(a,b))[a,b]=[b,a];if(a.n===b.n&&op==="−")a={n:Math.min(d-1,b.n+1),d};q.right=calc(a,b,op);q.expr=`${F(a.n,a.d)} ${op} ${F(b.n,b.d)}`;}
+ else{p=pick(pairsAK8);a=frac(p[0]);b=frac(p[1]);if(op==="−"&&!validSub(a,b))[a,b]=[b,a];if(!validSub(a,b)&&op==="−"){op="+"}q.right=calc(a,b,op);q.expr=`${F(a.n,a.d)} ${op} ${F(b.n,b.d)}`;
+ if(level===4){q.expr="";let av=V(a),bv=V(b);q.story=op==="+"?pick([
+ `På förmiddagen går Ella ${av} km och på eftermiddagen ${bv} km. Hur långt går hon sammanlagt?`,
+ `I en kanna finns ${av} liter saft. Sedan hälls ytterligare ${bv} liter i. Hur mycket saft finns i kannan nu?`,
+ `Noah använder ${av} meter band till en sak och ${bv} meter till en annan. Hur mycket band använder han sammanlagt?`
+ ]):pick([
+ `En flaska innehåller ${av} liter vatten. ${bv} liter används. Hur mycket vatten är kvar?`,
+ `Ett band är ${av} meter långt. ${bv} meter klipps bort. Hur mycket av bandet är kvar?`,
+ `Mira har ${av} kg deg och använder ${bv} kg. Hur mycket deg har hon kvar?`
+ ]);}}
+ q.mgn=lcm(a.d,b.d);q.solution=`MGN är ${q.mgn}. ${F(a.n,a.d)} ${op} ${F(b.n,b.d)} = ${V(q.right)}.`;return q}
+function build(){tasks=[];let seen=new Set(),tries=0;while(tasks.length<TOTAL&&tries<3000){tries++;let q=make(level),k=q.story+"|"+q.expr+"|"+key(q.right);if(!seen.has(k)){seen.add(k);tasks.push(q)}}while(tasks.length<TOTAL)tasks.push(make(level))}
+function distract(q){let r=q.right,c=[red(r.n+1,r.d),red(Math.max(1,r.n-1),r.d),red(r.n,r.d+1),red(r.n+2,r.d)];let vals=[r,...c].filter((x,j,a)=>a.findIndex(y=>key(y)===key(x))===j).slice(0,4);while(vals.length<4)vals.push(red(r.n+vals.length,r.d+1));return vals.sort(()=>Math.random()-.5)}
+function start(l){level=+l;pos=0;score=0;build();$("menu").classList.add("hidden");$("result").classList.add("hidden");$("game").classList.remove("hidden");render()}
+function render(){locked=false;let q=tasks[pos];$("progress").textContent=`Uppgift ${pos+1} av ${TOTAL} · ${score} rätt`;$("bar").style.width=(pos/TOTAL*100)+"%";$("story").innerHTML=q.story;$("question").innerHTML=q.expr;$("feedback").className="feedback hidden";$("solution").innerHTML="";$("next").classList.add("hidden");$("choices").innerHTML="";$("answer").value="";$("answer").disabled=false;$("check").disabled=false;
+ $("instruction").textContent=level===1?"Addera eller subtrahera bråk med samma nämnare.":level===2?"Addera eller subtrahera bråken. Hitta en gemensam nämnare.":level===3?"Addera eller subtrahera bråken och skriv ditt svar så enkelt som möjligt.":"Läs textuppgiften och avgör om du ska addera eller subtrahera.";
+ let typed=level>=3;$("typed").classList.toggle("hidden",!typed);$("choices").classList.toggle("hidden",typed);if(!typed){distract(q).forEach(r=>{let b=document.createElement("button");b.innerHTML=V(r);b.onclick=()=>judge(r,b);$("choices").appendChild(b)})}else setTimeout(()=>$("answer").focus(),0)}
+function judge(r){if(locked)return;locked=true;let q=tasks[pos],ok=key(r)===key(q.right);if(ok){score++;$("feedback").className="feedback ok";$("feedback").textContent="✅ Rätt!"}else{$("feedback").className="feedback bad";$("feedback").innerHTML=`❌ Inte riktigt. Rätt svar är ${V(q.right)}.`;$("solution").innerHTML=q.solution}$("answer").disabled=true;$("check").disabled=true;[...$("choices").children].forEach(b=>b.disabled=true);$("next").classList.remove("hidden")}
+$("check").onclick=()=>{let r=parse($("answer").value);if(!r){$("feedback").className="feedback info";$("feedback").textContent="Skriv ett heltal, ett bråk eller blandad form.";return}judge(r)};
+$("answer").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("check").click()}});
+$("next").onclick=()=>{if(++pos===TOTAL){$("game").classList.add("hidden");$("result").classList.remove("hidden");$("score").textContent=`Du fick ${score} av ${TOTAL} rätt på nivå ${level}.`}else render()};
+function home(){$("game").classList.add("hidden");$("result").classList.add("hidden");$("menu").classList.remove("hidden")}
+document.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>start(b.dataset.l));$("home").onclick=home;$("choose").onclick=home;$("retry").onclick=()=>start(level);
 })();

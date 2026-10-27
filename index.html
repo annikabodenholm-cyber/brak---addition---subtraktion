@@ -1,32 +1,11 @@
-<!doctype html>
-<html lang="sv">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bråkmästaren – Addition och subtraktion</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body><main><section class="card">
-<div id="menu">
-<h1>Bråkmästaren</h1><p>Addition och subtraktion av bråk</p>
-<button data-level="1" class="green">Nivå 1</button>
-<button data-level="2" class="yellow">Nivå 2</button>
-<button data-level="3" class="orange">Nivå 3</button>
-<button data-level="4" class="red">Nivå 4</button>
-</div>
-<div id="game" class="hidden">
-<div class="top"><button id="home">← Startsida</button><b id="progress"></b><b id="score"></b></div>
-<div class="bar"><div id="fill"></div></div>
-<p id="instruction" class="instruction"></p>
-<div id="story"></div><div id="question"></div>
-<div id="choices"></div>
-<div id="freeArea" class="hidden">
-<label for="freeAnswer">Ditt svar:</label>
-<input id="freeAnswer" autocomplete="off" placeholder="t.ex. 3/4 eller 1 1/2">
-<button id="check" class="blue">Kontrollera</button>
-</div>
-<div id="feedback"></div><div id="solution"></div>
-<button id="next" class="blue hidden">Nästa</button>
-</div>
-<div id="result" class="hidden"><h2>Klart!</h2><div id="final"></div>
-<button id="again" class="blue">Spela igen</button><button id="resultHome">Startsida</button></div>
-</section></main><script src="script.js"></script></body></html>
+<!doctype html><html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bråkmästaren – Addition och subtraktion med bråk</title><link rel="stylesheet" href="style.css"></head>
+<body><main><h1>Bråkmästaren</h1><p class="subtitle">Addition och subtraktion med bråk</p>
+<section id="menu">
+<button class="level green" data-l="1">Nivå 1</button>
+<button class="level yellow" data-l="2">Nivå 2</button>
+<button class="level orange" data-l="3">Nivå 3</button>
+<button class="level red" data-l="4">Nivå 4</button>
+</section>
+<section id="game" class="hidden"><div class="top"><button id="home" class="alt">← Byt nivå</button><b id="progress"></b></div><div class="track"><div id="bar"></div></div><p id="instruction"></p><div id="story"></div><div id="question"></div><div id="choices"></div><div id="typed" class="hidden"><label for="answer">Ditt svar</label><input id="answer" autocomplete="off" placeholder="t.ex. 3/4 eller 1 1/2"><small>Använd / för bråkstreck.</small><button id="check">Svara</button></div><div id="feedback" class="feedback hidden"></div><div id="solution"></div><button id="next" class="hidden">Nästa uppgift</button></section>
+<section id="result" class="hidden"><h2>Nivån är klar!</h2><p id="score"></p><button id="retry">Spela nivån igen</button><button id="choose" class="alt">Välj annan nivå</button></section>
+</main><script src="script.js"></script></body></html>
