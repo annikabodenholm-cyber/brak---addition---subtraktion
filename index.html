@@ -1,1 +1,32 @@
-<!doctype html><html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bråkmästaren – Addition och subtraktion</title><link rel="stylesheet" href="style.css"></head><body><main><section class="card"><div id="menu"><h1>Bråkmästaren</h1><p>Addition och subtraktion av bråk</p><button data-level="1" class="green">Nivå 1</button><button data-level="2" class="yellow">Nivå 2</button><button data-level="3" class="red">Nivå 3</button></div><div id="game" class="hidden"><div class="top"><button id="home">← Startsida</button><b id="progress"></b><b id="score"></b></div><div class="bar"><div id="fill"></div></div><p class="instruction">Förkorta svaret eller skriv i blandad form om det går.</p><div id="story"></div><div id="question"></div><div id="answers"></div><div id="feedback"></div><div id="solution"></div><button id="next" class="blue hidden">Nästa</button></div><div id="result" class="hidden"><h2>Klart!</h2><div id="final"></div><button id="again" class="blue">Spela igen</button><button id="resultHome">Startsida</button></div></section></main><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bråkmästaren – Addition och subtraktion</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body><main><section class="card">
+<div id="menu">
+<h1>Bråkmästaren</h1><p>Addition och subtraktion av bråk</p>
+<button data-level="1" class="green">Nivå 1</button>
+<button data-level="2" class="yellow">Nivå 2</button>
+<button data-level="3" class="orange">Nivå 3</button>
+<button data-level="4" class="red">Nivå 4</button>
+</div>
+<div id="game" class="hidden">
+<div class="top"><button id="home">← Startsida</button><b id="progress"></b><b id="score"></b></div>
+<div class="bar"><div id="fill"></div></div>
+<p id="instruction" class="instruction"></p>
+<div id="story"></div><div id="question"></div>
+<div id="choices"></div>
+<div id="freeArea" class="hidden">
+<label for="freeAnswer">Ditt svar:</label>
+<input id="freeAnswer" autocomplete="off" placeholder="t.ex. 3/4 eller 1 1/2">
+<button id="check" class="blue">Kontrollera</button>
+</div>
+<div id="feedback"></div><div id="solution"></div>
+<button id="next" class="blue hidden">Nästa</button>
+</div>
+<div id="result" class="hidden"><h2>Klart!</h2><div id="final"></div>
+<button id="again" class="blue">Spela igen</button><button id="resultHome">Startsida</button></div>
+</section></main><script src="script.js"></script></body></html>
