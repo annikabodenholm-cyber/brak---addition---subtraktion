@@ -4,6 +4,7 @@ function F(n,d){let r=red(n,d);return `<span class="frac"><span class="num">${r.
 function pick(a){return a[Math.floor(Math.random()*a.length)]}function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
 function parse(s){s=s.trim().replace(/\s+/g," ");let m=s.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)$/);if(m&&+m[3])return red((+m[1])*(+m[3])+(+m[2]),+m[3]);m=s.match(/^(\d+)\s*\/\s*(\d+)$/);if(m&&+m[2])return red(+m[1],+m[2]);if(/^\d+$/.test(s))return{n:+s,d:1};return null}
 const pairsEasy=[[2,4],[3,6],[4,8],[5,10],[3,9],[4,12],[6,12]];
+// Åk 8-pool för nivå 2–4: rimliga gemensamma nämnare, även några upp till ca 35–42.
 const pairsAK8=[[3,4],[2,3],[4,6],[4,8],[5,10],[6,9],[6,12],[5,6],[4,10],[8,12],[3,8],[5,8],[4,9],[5,12],[6,8],[7,10],[5,7],[6,7],[7,8],[7,9]];
 function frac(d){return{n:ri(1,d-1),d}}
 function calc(a,b,op){return op==="+"?red(a.n*b.d+b.n*a.d,a.d*b.d):red(a.n*b.d-b.n*a.d,a.d*b.d)}
