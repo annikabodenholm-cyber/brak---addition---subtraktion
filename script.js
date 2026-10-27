@@ -48,9 +48,10 @@ function show(){
  E("story").textContent=q.story;
  E("question").innerHTML=(level===4&&q.isStory)?"":`${F(q.a,q.b)} ${q.o} ${F(q.c,q.d)}`;
  E("choices").innerHTML="";E("feedback").textContent="";E("solution").innerHTML="";E("next").classList.add("hidden");
+ E("choices").classList.toggle("hidden",free);
  E("freeArea").classList.toggle("hidden",!free);
  if(free){E("freeAnswer").value="";E("freeAnswer").disabled=false;E("check").disabled=false;setTimeout(()=>E("freeAnswer").focus(),0)}
- else q.opts.forEach(r=>{let b=document.createElement("button");b.className="answer";b.innerHTML=V(r);b.addEventListener("click",()=>checkChoice(key(r)));E("choices").appendChild(b)})
+ else {q.opts.forEach(r=>{let b=document.createElement("button");b.className="answer";b.innerHTML=V(r);b.addEventListener("click",()=>checkChoice(key(r)));E("choices").appendChild(b)})}
 }
 function finish(correct,q){
  if(correct){points++;E("feedback").textContent="✅ Rätt!"}else{E("feedback").innerHTML=`❌ Rätt svar: ${V(q.right)}`;E("solution").innerHTML=(level===4&&q.isStory?`Här behövs ${q.o==="+"?"addition":"subtraktion"}. `:"")+q.solution}
